@@ -34,10 +34,10 @@ public class Message {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_creation")
     Calendar creationDate;
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne
     @JoinColumn(name = "chat_id")
     Chat chat;
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne
     @JoinColumn(name = "creator_id")
     User creator;
     @Enumerated(EnumType.STRING)

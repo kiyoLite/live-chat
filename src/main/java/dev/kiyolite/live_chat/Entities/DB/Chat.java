@@ -23,10 +23,10 @@ public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne
     @JoinColumn(name = "user1_id")
     User user1;
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne
     @JoinColumn(name = "user2_id")
     User user2;
     

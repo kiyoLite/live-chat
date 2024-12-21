@@ -26,7 +26,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
     String email;
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne
     @JoinColumn(name = "credential_id")
     Credential credential;
     
