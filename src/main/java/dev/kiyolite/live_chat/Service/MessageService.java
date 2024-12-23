@@ -10,6 +10,9 @@ import dev.kiyolite.live_chat.Entities.RequestLoadingMessages;
 import dev.kiyolite.live_chat.Enums.MessageStatus;
 import dev.kiyolite.live_chat.Persistence.DAO.MessageDAO;
 import dev.kiyolite.live_chat.Persistence.Repository.ChatRepository;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -22,37 +25,39 @@ import org.springframework.util.StringUtils;
  */
 @Service
 public class MessageService {
+
     private MessageDAO dao;
     private ChatRepository chatRepository;
-    
-    
-    public void changeMessageStatusAsRead(List<Message> messages){
-        for(Message singleMessages : messages){
+
+    public void changeMessageStatusAsRead(List<Message> messages) {
+        for (Message singleMessages : messages) {
             singleMessages.setStatus(MessageStatus.READ);
         }
         dao.saveAll(messages);
     }
-    
-    public List<MessageWrapper> loadingMoreMessages(RequestLoadingMessages request){
-        long chatId = request.chatId();
-        String startDateAsString = request.startDate();
-        int totalMessages = request.totalMessages();
-        
-       if(StringUtils.hasText(startDateAsString))return loadingLastMessages(chatId, totalMessages);
-//       return chatRepository.getMessagesFromChat(chatId, totalMessages, startDateAsString);
-return null;
-       
-       
-        
-    }
-    
-    private List<MessageWrapper> loadingLastMessages(long chatId, int totalMessges){
+
+    private List<MessageWrapper> loadingLastMessages(long chatId, int totalMessges) {
         return chatRepository.getMessagesFromChat(chatId, totalMessges);
     }
     
+    public List<MessageWrapper> loadingMoreMessages(RequestLoadingMessages request) throws Exception {
+        long chatId = request.chatId();
+        String startDateAsString = request.startDate();
+        int totalMessages = request.totalMessages();
+
+        if (StringUtils.hasText(startDateAsString))return loadingLastMessages(chatId, totalMessages);
+        
+        SimpleDateFormat dateCaster = new SimpleDateFormat("yyyy-m-dd");
+        Calendar startDate = Calendar.getInstance();
+        startDate.setTime(dateCaster.parse(startDateAsString));
+        return chatRepository.getMessagesFromChat(chatId, totalMessages, startDate);
+
+    }
     
+
+
     @Autowired
-    public void setDAO(MessageDAO dao){
+    public void setDAO(MessageDAO dao) {
         this.dao = dao;
     }
 }
