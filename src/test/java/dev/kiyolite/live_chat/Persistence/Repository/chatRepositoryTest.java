@@ -57,13 +57,13 @@ public class chatRepositoryTest {
 
     @BeforeAll
     public void setUpTestEnviroment() {
-        credentialOne = new Credential("testNameOne", "testPasswordOne", Rol.User, true);
-        credentialTwo = new Credential("testNameTwo", "testPasswordTwo", Rol.User, true);
+        credentialOne = new Credential( "testPasswordOne", Rol.User, true);
+        credentialTwo = new Credential( "testPasswordTwo", Rol.User, true);
         credentialDAO.save(credentialOne);
         credentialDAO.save(credentialTwo);
 
-        userOne = new User("testEmailOne", credentialOne);
-        userTwo = new User("testEmailTwo", credentialTwo);
+        userOne = new User("testEmailOne", credentialOne,"testNameOne");
+        userTwo = new User("testEmailTwo", credentialTwo,"testNameTwo");
         userDAO.save(userOne);
         userDAO.save(userTwo);
 
@@ -110,10 +110,10 @@ public class chatRepositoryTest {
 
         long chatId = chat.getId();
         int dummyLimit = 100;
-        List<MessageWrapper> ChatMessages = repository.getMessagesFromChat(chatId, dummyLimit, now);
+        List<MessageWrapper> chatMessages = repository.getMessagesFromChat(chatId, dummyLimit, now);
 
         short expectTotalRegister = 1;
-        int actualRegister = ChatMessages.size();
+        int actualRegister = chatMessages.size();
         Assertions.assertEquals(expectTotalRegister, actualRegister);
 
     }
@@ -147,7 +147,7 @@ public class chatRepositoryTest {
         short expectSize = 1;
         int actualSize = contacts.size();
         Assertions.assertEquals(expectSize, actualSize);
-        String expectContactName = userTwo.getCredentials().getUserName();
+        String expectContactName = userTwo.getUserName();
         String actualContactName = contacts.get(0).contactName();
         Assertions.assertEquals(expectContactName, actualContactName);
 

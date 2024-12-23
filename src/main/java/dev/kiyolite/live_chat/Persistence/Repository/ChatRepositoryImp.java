@@ -107,8 +107,8 @@ public class ChatRepositoryImp implements ChatRepository {
                 .otherwise(0);
         Expression totalUnreadMessagePerChat = builder.sum(readMessageStatusCase);
         Expression nameContactsCase = builder.selectCase()
-                .when(builder.not(builder.equal(messageChat.get("user1").get("id"), userID)), messageChat.get("user1").get("credential").get("userName"))
-                .otherwise(messageChat.get("user2").get("credential").get("userName"));
+                .when(builder.not(builder.equal(messageChat.get("user1").get("id"), userID)), messageChat.get("user1").get("userName"))
+                .otherwise(messageChat.get("user2").get("userName"));
         criteriaQuery.multiselect(
                 root.get("chat").get("id"),
                 totalUnreadMessagePerChat,
