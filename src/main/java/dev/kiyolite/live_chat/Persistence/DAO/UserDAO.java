@@ -5,6 +5,7 @@
 package dev.kiyolite.live_chat.Persistence.DAO;
 
 import dev.kiyolite.live_chat.Entities.DB.User;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -12,5 +13,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author soyky
  */
 public interface UserDAO extends JpaRepository<User, Long>{
+    
+    public Optional<User> findByUserName(String userName);
     
 }

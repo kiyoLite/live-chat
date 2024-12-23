@@ -5,7 +5,9 @@
 package dev.kiyolite.live_chat.Service;
 
 import dev.kiyolite.live_chat.Entities.DB.Credential;
+import dev.kiyolite.live_chat.Entities.DB.User;
 import dev.kiyolite.live_chat.Persistence.DAO.CredentialDAO;
+import dev.kiyolite.live_chat.Persistence.DAO.UserDAO;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,18 +23,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomeUserDetailsService implements UserDetailsService{
 
-    CredentialDAO dao ;
+    UserDAO dao ;
     
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Credential> possibleCredential = dao.findByUserName(username);
-        Credential credential  = possibleCredential.orElseThrow(() -> new UsernameNotFoundException("dont find user witih name: " + username));
-        UserDetails userDetails = credential.getCustomeUserDetals();
+        Optional<User> possibleCredential = dao.findByUserName(username);
+        User credential  = possibleCredential.orElseThrow(() -> new UsernameNotFoundException("dont find user witih name: " + username));
+        UserDetails userDetails = credential.getUserDetais();
         return userDetails;
     }
 
     @Autowired
-    public void setDao(CredentialDAO dao) {
+    public void setDao(UserDAO dao) {
         this.dao = dao;
     }
     

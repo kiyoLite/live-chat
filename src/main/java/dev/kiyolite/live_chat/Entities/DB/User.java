@@ -4,7 +4,7 @@
  */
 package dev.kiyolite.live_chat.Entities.DB;
 
-import jakarta.persistence.CascadeType;
+import dev.kiyolite.live_chat.Entities.CustomeUserDetails;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,34 +13,45 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  *
  * @author soyky
  */
 @Entity
-@Table(name ="member")
+@Table(name = "member")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+    @Column(unique = true)
+    String userName;
     String email;
     @OneToOne
     @JoinColumn(name = "credential_id")
     Credential credential;
-    
-    public User(){}
 
-    public User(long id, String email, Credential credentials) {
+    public User() {
+    }
+
+    public User(long id, String email, Credential credentials, String userName) {
         this.id = id;
         this.email = email;
+        this.userName = userName;
         this.credential = credentials;
     }
 
-    public User(String email, Credential credentials) {
+    public User(String email, Credential credentials, String userName) {
         this.email = email;
         this.credential = credentials;
+        this.userName = userName;
+    }
+    
+    public UserDetails getUserDetais(){
+        CustomeUserDetails userDetails = new CustomeUserDetails(userName, credential.getPassword(), credential.getRol(), true);
+        return userDetails;
     }
 
     public long getId() {
@@ -66,6 +77,20 @@ public class User {
     public void setCredentials(Credential credentials) {
         this.credential = credentials;
     }
-    
-    
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Credential getCredential() {
+        return credential;
+    }
+
+    public void setCredential(Credential credential) {
+        this.credential = credential;
+    }
 }

@@ -13,5 +13,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author soyky
  */
 public interface CredentialDAO extends JpaRepository<Credential, Long> {
-    public Optional<Credential> findByUserName(String userName);
 }

@@ -19,8 +19,6 @@ public class Credential {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(unique = true)
-    private String userName;
     private String password;
     @Enumerated(EnumType.STRING)
     private Rol rol;
@@ -28,34 +26,12 @@ public class Credential {
     
     public Credential(){}
 
-    public Credential(String userName, String password, Rol rol, boolean isEnable) {
-        this.userName = userName;
+    public Credential( String password, Rol rol, boolean isEnable) {
         this.password = password;
         this.rol = rol;
         this.isEnable = isEnable;
     }
     
-    public CustomeUserDetails getCustomeUserDetals(){
-        CustomeUserDetails customeUserDetails = new CustomeUserDetails(
-                userName,
-                password,
-                rol,
-                isEnable
-        );
-        
-        return customeUserDetails;
-    }
-    
-    
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public String getPassword() {
         return password;
     }
