@@ -8,6 +8,6 @@ package dev.kiyolite.live_chat.Entities;
  *
  * @author soyky
  */
-public record AuthLogin(String userName, String password) {
+public record AuthLogin(String jwtToken) {
 
 }
