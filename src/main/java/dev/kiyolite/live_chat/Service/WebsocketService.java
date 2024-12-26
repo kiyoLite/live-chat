@@ -22,16 +22,17 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
  * @author soyky
  */
 @Service
-public class WebsocketService extends TextWebSocketHandler{
-    private ConcurrentHashMap<WebSocketSession,Long> connectUsers = new ConcurrentHashMap<>();
-    private HandlerWebsocketRequestService requestHandler; 
+public class WebsocketService extends TextWebSocketHandler {
+
+    private static ConcurrentHashMap<WebSocketSession, Long> connectUsers = new ConcurrentHashMap<>();
+    private HandlerWebsocketRequestService requestHandler;
     private ObjectMapper ObjectMapper;
-    
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         connectUsers.put(session, null);
     }
-    
+
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         connectUsers.remove(session);
@@ -41,28 +42,26 @@ public class WebsocketService extends TextWebSocketHandler{
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         WebsocketRequest request = ObjectMapper.convertValue(message.getPayload(), WebsocketRequest.class);
         WebsocketRequestType requestType = WebsocketRequestType.valueOf(request.websocketRequestType());
-        switch(requestType){
+        switch (requestType) {
             case CONNECT:
-                long userId = HandlerWebsocketRequestService.connectUser(request);
-                connectUsers.put(session,userId);
+                requestHandler.connectUser(request, session);
+            case SEND_MESSAGE:
+
                 break;
         }
     }
 
-    
-    
     public void setObjectMapper(ObjectMapper ObjectMapper) {
         this.ObjectMapper = ObjectMapper;
     }
 
-    
-    
     @Autowired
     public void setRequestHandler(HandlerWebsocketRequestService requestHandler) {
         this.requestHandler = requestHandler;
     }
-    
-    
 
-    
+    public static ConcurrentHashMap getConnectUsers() {
+        return connectUsers;
+    }
+
 }
