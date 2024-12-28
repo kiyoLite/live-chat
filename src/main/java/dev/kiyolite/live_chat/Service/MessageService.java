@@ -4,18 +4,22 @@
  */
 package dev.kiyolite.live_chat.Service;
 
+import dev.kiyolite.live_chat.Entities.DB.Chat;
 import dev.kiyolite.live_chat.Entities.DB.Message;
+import dev.kiyolite.live_chat.Entities.DB.User;
 import dev.kiyolite.live_chat.Entities.MessageWrapper;
 import dev.kiyolite.live_chat.Entities.RequestLoadingMessages;
+import dev.kiyolite.live_chat.Entities.SendMessageRequest;
 import dev.kiyolite.live_chat.Enums.MessageStatus;
+import dev.kiyolite.live_chat.Persistence.DAO.ChatDAO;
 import dev.kiyolite.live_chat.Persistence.DAO.MessageDAO;
 import dev.kiyolite.live_chat.Persistence.Repository.ChatRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -28,6 +32,7 @@ public class MessageService {
 
     private MessageDAO dao;
     private ChatRepository chatRepository;
+    private EntityManager entityManager;
 
     public void changeMessageStatusAsRead(List<Message> messages) {
         for (Message singleMessages : messages) {
@@ -54,6 +59,20 @@ public class MessageService {
 
     }
     
+    @Transactional
+    public Message saveMessage(SendMessageRequest requestMessage, boolean isReceiverConnect, long userId){
+        Chat chatFromMessage = entityManager.getReference(Chat.class, requestMessage.chatId());
+        User userCreatorMessage = entityManager.getReference(User.class, userId);
+        Message message = new Message(
+                requestMessage.content(),
+                Calendar.getInstance(),
+                chatFromMessage,
+                userCreatorMessage,
+                isReceiverConnect ? MessageStatus.READ : MessageStatus.UNREAD
+        );
+        return dao.save(message);
+        
+    }
 
 
     @Autowired
