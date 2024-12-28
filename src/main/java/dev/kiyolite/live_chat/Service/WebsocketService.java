@@ -44,7 +44,7 @@ public class WebsocketService extends TextWebSocketHandler {
         WebsocketRequestType requestType = WebsocketRequestType.valueOf(request.websocketRequestType());
         switch (requestType) {
             case CONNECT:
-                requestHandler.connectUser(request, session);
+                requestHandler.tryConnectUser(request, session);
             case SEND_MESSAGE:
 
                 break;
