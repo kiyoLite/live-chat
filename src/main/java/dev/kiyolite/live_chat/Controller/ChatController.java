@@ -5,12 +5,14 @@
 package dev.kiyolite.live_chat.Controller;
 
 import dev.kiyolite.live_chat.Entities.ChatWrapper;
+import dev.kiyolite.live_chat.Entities.ContactAdditionRequest;
 import dev.kiyolite.live_chat.Service.ChatService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -27,6 +29,10 @@ public class ChatController {
         return ChatService.getContactsFromUser(userNameRequest);
     }
 
+    @PostMapping("/contact")
+    public ResponseEntity<Void> addContact(@RequestBody ContactAdditionRequest addContanctRequest, long userRequestId){
+        return ChatService.addContact(addContanctRequest, userRequestId);
+    }
     
     
     @Autowired

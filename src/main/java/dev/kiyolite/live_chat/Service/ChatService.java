@@ -47,21 +47,21 @@ public class ChatService {
 
     }
 
-    public ResponseEntity<String> addContact(ContactAdditionRequest contactRequest, long userIdCreatorRequest) {
+    public ResponseEntity<Void> addContact(ContactAdditionRequest contactRequest, long userIdCreatorRequest) {
         String contactName = contactRequest.contactName();
         User creatorRequest = userDAO.findById(userIdCreatorRequest).get();
         Optional<User> possibleContact = userDAO.findByUserName(contactName);
         User contact = possibleContact.orElseGet(() -> null);
-        ResponseEntity<String> response;
+        ResponseEntity<Void> response;
 
         if (contact == null) {
-            response = new ResponseEntity<>("user doesn't found", HttpStatus.NOT_FOUND);
+            response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             return response;
         }
 
         Chat chat = new Chat(contact, creatorRequest);
         chatDAO.save(chat);
-        response = new ResponseEntity<String>("contact was added", HttpStatus.ACCEPTED);
+        response = new ResponseEntity<>(null, HttpStatus.ACCEPTED);
         return response;
     }
 
