@@ -14,7 +14,6 @@ import dev.kiyolite.live_chat.Entities.WebsocketRequest;
 import dev.kiyolite.live_chat.Persistence.DAO.UserDAO;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
@@ -32,7 +31,6 @@ import org.springframework.web.socket.WebSocketSession;
 @Service
 public class HandlerWebsocketRequestService {
 
-    private WebsocketService websocketService;
     private ObjectMapper objMapper;
     private JWTService jwtService;
     private UserDAO userDAO;
