@@ -9,8 +9,8 @@ import dev.kiyolite.live_chat.Entities.RequestLoadingMessages;
 import dev.kiyolite.live_chat.Service.MessageService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +27,11 @@ public class MessageController {
     @PostMapping("/message")
     public ResponseEntity<List<MessageWrapper>> getMessageFromChat(@RequestBody RequestLoadingMessages request){
         return messageService.loadingMoreMessages(request);
+    }
+    
+    @PutMapping("/message/status")
+    public ResponseEntity<Void> markMessagesAsRead(List<MessageWrapper> messages){
+        return messageService.changeMessageStatusAsRead(messageService.clientToDBMessages(messages));
     }
     
     
