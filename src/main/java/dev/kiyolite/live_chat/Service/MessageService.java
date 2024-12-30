@@ -17,13 +17,16 @@ import dev.kiyolite.live_chat.Persistence.Repository.ChatRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.function.EntityResponse;
 
 /**
  *
@@ -36,11 +39,25 @@ public class MessageService {
     private ChatRepository chatRepository;
     private EntityManager entityManager;
 
-    public void changeMessageStatusAsRead(List<Message> messages) {
+    public ResponseEntity<Void> changeMessageStatusAsRead(List<Message> messages) {
         for (Message singleMessages : messages) {
             singleMessages.setStatus(MessageStatus.READ);
         }
         dao.saveAll(messages);
+        ResponseEntity response = new ResponseEntity(null, HttpStatus.NO_CONTENT);
+        return response;
+    }
+
+    public List<Message> clientToDBMessages(List<MessageWrapper> clientMessages) {
+        List<Message> messages = new ArrayList<>(clientMessages.size());
+        for (MessageWrapper singleClientMessage : clientMessages) {
+            long messageId = singleClientMessage.id();
+            Optional<Message> possibleDBMessage = dao.findById(messageId);
+            if (possibleDBMessage.isPresent()) {
+                messages.add(possibleDBMessage.get());
+            }
+        }
+        return messages;
     }
 
     private ResponseEntity<List<MessageWrapper>> loadingLastMessages(long chatId, int totalMessges) {
