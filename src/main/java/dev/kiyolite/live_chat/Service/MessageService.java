@@ -20,6 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -41,26 +43,36 @@ public class MessageService {
         dao.saveAll(messages);
     }
 
-    private List<MessageWrapper> loadingLastMessages(long chatId, int totalMessges) {
-        return chatRepository.getMessagesFromChat(chatId, totalMessges);
+    private ResponseEntity<List<MessageWrapper>> loadingLastMessages(long chatId, int totalMessges) {
+        List<MessageWrapper> message = chatRepository.getMessagesFromChat(chatId, totalMessges);
+        ResponseEntity<List<MessageWrapper>> response = new ResponseEntity<>(message, HttpStatus.ACCEPTED);
+        return response;
     }
-    
-    public List<MessageWrapper> loadingMoreMessages(RequestLoadingMessages request) throws Exception {
+
+    public ResponseEntity<List<MessageWrapper>> loadingMoreMessages(RequestLoadingMessages request) {
         long chatId = request.chatId();
         String startDateAsString = request.startDate();
         int totalMessages = request.totalMessages();
 
-        if (StringUtils.hasText(startDateAsString))return loadingLastMessages(chatId, totalMessages);
-        
+        if (StringUtils.hasText(startDateAsString)) {
+            return loadingLastMessages(chatId, totalMessages);
+        }
+
         SimpleDateFormat dateCaster = new SimpleDateFormat("yyyy-m-dd");
         Calendar startDate = Calendar.getInstance();
-        startDate.setTime(dateCaster.parse(startDateAsString));
-        return chatRepository.getMessagesFromChat(chatId, totalMessages, startDate);
+        try {
+            startDate.setTime(dateCaster.parse(startDateAsString));
+        } catch (Exception e) {
 
+            return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        List<MessageWrapper> message = chatRepository.getMessagesFromChat(chatId, totalMessages, startDate);
+        ResponseEntity<List<MessageWrapper>> response = new ResponseEntity<>(message, HttpStatus.ACCEPTED);
+        return response;
     }
-    
+
     @Transactional
-    public Message saveMessage(SendMessageRequest requestMessage, boolean isReceiverConnect, long userId){
+    public Message saveMessage(SendMessageRequest requestMessage, boolean isReceiverConnect, long userId) {
         Chat chatFromMessage = entityManager.getReference(Chat.class, requestMessage.chatId());
         User userCreatorMessage = entityManager.getReference(User.class, userId);
         Message message = new Message(
@@ -71,9 +83,8 @@ public class MessageService {
                 isReceiverConnect ? MessageStatus.READ : MessageStatus.UNREAD
         );
         return dao.save(message);
-        
-    }
 
+    }
 
     @Autowired
     public void setDAO(MessageDAO dao) {
