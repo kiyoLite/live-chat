@@ -4,6 +4,14 @@
  */
 package dev.kiyolite.live_chat.Controller;
 
+import dev.kiyolite.live_chat.Entities.MessageWrapper;
+import dev.kiyolite.live_chat.Entities.RequestLoadingMessages;
+import dev.kiyolite.live_chat.Service.MessageService;
+import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -12,5 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class MessageController {
+    
+    private MessageService messageService;
+    
+    
+    @PostMapping("/message")
+    public ResponseEntity<List<MessageWrapper>> getMessageFromChat(@RequestBody RequestLoadingMessages request){
+        return messageService.loadingMoreMessages(request);
+    }
+    
+    
     
 }
