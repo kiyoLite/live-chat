@@ -46,12 +46,12 @@ public class ChatService {
 
     }
 
-    public ResponseEntity<Void> addContact(ContactAdditionRequest contactRequest, long userIdCreatorRequest) {
+    public ResponseEntity<ChatWrapper> addContact(ContactAdditionRequest contactRequest, long userIdCreatorRequest) {
         String contactName = contactRequest.contactName();
         User creatorRequest = userDAO.findById(userIdCreatorRequest).get();
         Optional<User> possibleContact = userDAO.findByUserName(contactName);
         User contact = possibleContact.orElseGet(() -> null);
-        ResponseEntity<Void> response;
+        ResponseEntity<ChatWrapper> response;
 
         if (contact == null) {
             response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -60,10 +60,11 @@ public class ChatService {
 
         Chat chat = new Chat(contact, creatorRequest);
         chatDAO.save(chat);
-        response = new ResponseEntity<>(null, HttpStatus.ACCEPTED);
+        ChatWrapper wrapper = new ChatWrapper(chat.getId(), 0, contactName);
+        response = new ResponseEntity<>(wrapper, HttpStatus.ACCEPTED);
         return response;
     }
-
+   
     @Autowired
     public void setChatRepository(ChatRepository chatRepository) {
         this.chatRepository = chatRepository;

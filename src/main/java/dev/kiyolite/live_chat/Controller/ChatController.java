@@ -30,7 +30,7 @@ public class ChatController {
     }
 
     @PostMapping("/contact")
-    public ResponseEntity<Void> addContact(@RequestBody ContactAdditionRequest addContanctRequest, long userRequestId){
+    public ResponseEntity<ChatWrapper> addContact(@RequestBody ContactAdditionRequest addContanctRequest, long userRequestId){
         return ChatService.addContact(addContanctRequest, userRequestId);
     }
     
