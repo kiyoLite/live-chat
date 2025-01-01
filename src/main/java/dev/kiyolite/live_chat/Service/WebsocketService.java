@@ -5,7 +5,6 @@
 package dev.kiyolite.live_chat.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.kiyolite.live_chat.Entities.DB.User;
 import dev.kiyolite.live_chat.Entities.WebsocketRequest;
 import dev.kiyolite.live_chat.Enums.WebsocketRequestType;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 

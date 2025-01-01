@@ -4,9 +4,7 @@
  */
 package dev.kiyolite.live_chat.Entities.DB;
 
-import dev.kiyolite.live_chat.Entities.CustomeUserDetails;
 import dev.kiyolite.live_chat.Enums.Rol;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

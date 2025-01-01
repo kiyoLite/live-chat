@@ -4,9 +4,7 @@
  */
 package dev.kiyolite.live_chat.Service;
 
-import dev.kiyolite.live_chat.Entities.DB.Credential;
 import dev.kiyolite.live_chat.Entities.DB.User;
-import dev.kiyolite.live_chat.Persistence.DAO.CredentialDAO;
 import dev.kiyolite.live_chat.Persistence.DAO.UserDAO;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
