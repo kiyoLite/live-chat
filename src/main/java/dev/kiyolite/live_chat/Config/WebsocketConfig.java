@@ -5,6 +5,7 @@
 package dev.kiyolite.live_chat.Config;
 
 import dev.kiyolite.live_chat.Service.WebsocketService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -25,6 +26,10 @@ public class WebsocketConfig implements WebSocketConfigurer{
         registry.addHandler(chatHandler, "/chat");
     }
     
+    @Autowired
+    public void setChatHandler(WebsocketService chatHandler){
+        this.chatHandler = chatHandler;
+    }
     
     
 }

@@ -122,4 +122,19 @@ public class HandlerWebsocketRequestService {
         this.objMapper = objMapper;
     }
 
+    @Autowired
+    public void setJwtService(JWTService jwtService) {
+        this.jwtService = jwtService;
+    }
+
+    @Autowired
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    @Autowired
+    public void setMessageService(MessageService messageService) {
+        this.messageService = messageService;
+    }
+
 }

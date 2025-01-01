@@ -5,11 +5,14 @@
 package dev.kiyolite.live_chat.Service;
 
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author soyky
  */
+
+@Service
 public class JWTService {
     
     public boolean isValidToken(UserDetails userName, String token){

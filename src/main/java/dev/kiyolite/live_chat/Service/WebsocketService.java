@@ -51,6 +51,7 @@ public class WebsocketService extends TextWebSocketHandler {
         }
     }
 
+    @Autowired
     public void setObjectMapper(ObjectMapper ObjectMapper) {
         this.ObjectMapper = ObjectMapper;
     }

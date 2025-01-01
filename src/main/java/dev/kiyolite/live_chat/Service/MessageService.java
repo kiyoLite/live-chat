@@ -11,7 +11,6 @@ import dev.kiyolite.live_chat.Entities.MessageWrapper;
 import dev.kiyolite.live_chat.Entities.RequestLoadingMessages;
 import dev.kiyolite.live_chat.Entities.SendMessageRequest;
 import dev.kiyolite.live_chat.Enums.MessageStatus;
-import dev.kiyolite.live_chat.Persistence.DAO.ChatDAO;
 import dev.kiyolite.live_chat.Persistence.DAO.MessageDAO;
 import dev.kiyolite.live_chat.Persistence.Repository.ChatRepository;
 import jakarta.persistence.EntityManager;
@@ -26,7 +25,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.function.EntityResponse;
 
 /**
  *
@@ -107,4 +105,15 @@ public class MessageService {
     public void setDAO(MessageDAO dao) {
         this.dao = dao;
     }
+
+    @Autowired
+    public void setChatRepository(ChatRepository chatRepository) {
+        this.chatRepository = chatRepository;
+    }
+
+    @Autowired
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
 }
