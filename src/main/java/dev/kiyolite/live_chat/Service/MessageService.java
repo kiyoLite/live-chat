@@ -69,7 +69,7 @@ public class MessageService {
         String startDateAsString = request.startDate();
         int totalMessages = request.totalMessages();
 
-        if (StringUtils.hasText(startDateAsString)) {
+        if (!StringUtils.hasText(startDateAsString)) {
             return loadingLastMessages(chatId, totalMessages);
         }
 
