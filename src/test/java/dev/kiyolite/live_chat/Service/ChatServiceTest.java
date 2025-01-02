@@ -113,6 +113,7 @@ public class ChatServiceTest {
         String expectContactName = userTwo.getUserName();
         String obtainContactName = contacts.get(0).contactName();
         Assertions.assertEquals(expectContactName, obtainContactName);
+
     }
 
     @Test
@@ -133,6 +134,7 @@ public class ChatServiceTest {
         String expectContactName = userTwo.getUserName();
         String obtainContactName = contacts.get(0).contactName();
         Assertions.assertEquals(expectContactName, obtainContactName);
+
     }
 
     @Test
@@ -148,4 +150,36 @@ public class ChatServiceTest {
         int obtainHttpStatusCode = response.getStatusCode().value();
         Assertions.assertEquals(expectHtppStatusCode, obtainHttpStatusCode);
     }
+
+    @Test
+    public void addContact() {
+        Credential credentialThree = new Credential("testPassworedThree", Rol.User, true);
+        User userThree = new User("testEmailThree", credentialThree, "testNameThree");
+        credentialDAO.save(credentialThree);
+        userDAO.save(userThree);
+
+        String ContactName = userThree.getUserName();
+        ContactAdditionRequest request = new ContactAdditionRequest(ContactName);
+        ResponseEntity<ChatWrapper> response = service.addContact(request, userOne.getId());
+
+        chatDAO.deleteById(response.getBody().chatId());
+        userDAO.delete(userThree);
+        credentialDAO.delete(credentialThree);
+
+        boolean isSuccessfulResponse = response.getStatusCode().is2xxSuccessful();
+        Assertions.assertTrue(isSuccessfulResponse);
+
+    }
+
+    @Test
+    public void addCOntactFromNonexistentUsername() {
+        String ContactName = "Nonexistent user's name";
+        ContactAdditionRequest request = new ContactAdditionRequest(ContactName);
+        ResponseEntity response = service.addContact(request, userOne.getId());
+
+        int expectHtppStatusCode = 404;
+        int obtainHttpStatusCode = response.getStatusCode().value();
+        Assertions.assertEquals(expectHtppStatusCode, obtainHttpStatusCode);
+    }
+
 }
