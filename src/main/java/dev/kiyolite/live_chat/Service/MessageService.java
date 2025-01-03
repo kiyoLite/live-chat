@@ -73,7 +73,7 @@ public class MessageService {
             return loadingLastMessages(chatId, totalMessages);
         }
 
-        SimpleDateFormat dateCaster = new SimpleDateFormat("yyyy-m-dd");
+        SimpleDateFormat dateCaster = new SimpleDateFormat("yyyy-MM-dd-H-m-s");
         Calendar startDate = Calendar.getInstance();
         try {
             startDate.setTime(dateCaster.parse(startDateAsString));
