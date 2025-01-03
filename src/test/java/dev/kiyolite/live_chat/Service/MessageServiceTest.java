@@ -9,6 +9,8 @@ import dev.kiyolite.live_chat.Entities.MessageWrapper;
 import dev.kiyolite.live_chat.Entities.RequestLoadingMessages;
 import dev.kiyolite.live_chat.Enums.MessageStatus;
 import dev.kiyolite.live_chat.Persistence.DAO.MessageDAO;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -65,6 +67,29 @@ public class MessageServiceTest {
         int expectTotalMessages = 2;
         int obtainTotalMessages = responseMessages.size();
         Assertions.assertEquals(expectTotalMessages, obtainTotalMessages);
-        System.out.println(responseMessages);
     }
+
+    @Test
+    @Sql("/testEntities.sql")
+    @Sql("/TestMessagesDifferentDates.sql")
+    public void loadingMoreMessages(){
+        SimpleDateFormat dateFomart = new SimpleDateFormat("yyyy-MM-dd-H-m-s");
+        Calendar fiveMinutesAgo = Calendar.getInstance();
+        fiveMinutesAgo.add(Calendar.MINUTE, -5);
+        
+        long chatIdFromSqlScript = 1;
+        String startDateLoadingMessage = dateFomart.format(fiveMinutesAgo.getTime());
+        int dummyLimit = 100 ;
+        RequestLoadingMessages request = new RequestLoadingMessages(chatIdFromSqlScript,startDateLoadingMessage,dummyLimit);
+        ResponseEntity<List<MessageWrapper>> response = messageService.loadingMoreMessages(request);
+        List<MessageWrapper> messagesFromResponse = response.getBody() ;
+        
+        boolean isSuccessResponse = response.getStatusCode().is2xxSuccessful();
+        Assertions.assertTrue(isSuccessResponse);
+        int expectTotalMessages = 2;
+        int obtainTotalMessages = messagesFromResponse.size();
+        Assertions.assertEquals(expectTotalMessages, obtainTotalMessages);
+    }
+    
+
 }
