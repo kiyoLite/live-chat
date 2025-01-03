@@ -1,0 +1,3 @@
+INSERT INTO message(id, content, date_creation, chat_id, creator_id, status) VALUES (1, "Test message 1", DATE_SUB(NOW(), INTERVAL 5 MINUTE), 1, 1, "READ");
+INSERT INTO message(id, content, date_creation, chat_id, creator_id, status) VALUES (2, "Test message 2", DATE_SUB(NOW(), INTERVAL 5 MINUTE), 1, 1, "READ");
+INSERT INTO message(id, content, date_creation, chat_id, creator_id, status) VALUES (3, "Test message 3", NOW(), 1, 1, "READ");
