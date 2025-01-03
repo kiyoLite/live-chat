@@ -5,6 +5,8 @@
 package dev.kiyolite.live_chat.Service;
 
 import dev.kiyolite.live_chat.Entities.DB.Message;
+import dev.kiyolite.live_chat.Entities.MessageWrapper;
+import dev.kiyolite.live_chat.Entities.RequestLoadingMessages;
 import dev.kiyolite.live_chat.Enums.MessageStatus;
 import dev.kiyolite.live_chat.Persistence.DAO.MessageDAO;
 import java.util.List;
@@ -48,5 +50,21 @@ public class MessageServiceTest {
 
     }
 
+    @Test
+    @Sql("/testEntities.sql")
+    @Sql("/testMessagesFromToday.sql")
+    public void getLastestMessages() {
+        long chatIdFromSqlScript = 1;
+        RequestLoadingMessages request = new RequestLoadingMessages(chatIdFromSqlScript, null, 2);
+        messageService.loadingMoreMessages(request);
+        ResponseEntity<List<MessageWrapper>> response = messageService.loadingMoreMessages(request);
+        List<MessageWrapper> responseMessages = response.getBody();
 
+        boolean isSuccessfulResponse = response.getStatusCode().is2xxSuccessful();
+        Assertions.assertTrue(isSuccessfulResponse);
+        int expectTotalMessages = 2;
+        int obtainTotalMessages = responseMessages.size();
+        Assertions.assertEquals(expectTotalMessages, obtainTotalMessages);
+        System.out.println(responseMessages);
+    }
 }
