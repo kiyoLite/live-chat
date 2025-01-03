@@ -7,8 +7,6 @@ package dev.kiyolite.live_chat.Service;
 import dev.kiyolite.live_chat.Entities.DB.Message;
 import dev.kiyolite.live_chat.Enums.MessageStatus;
 import dev.kiyolite.live_chat.Persistence.DAO.MessageDAO;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
 
 /**
  *
@@ -25,23 +24,21 @@ import org.springframework.http.ResponseEntity;
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Sql(scripts = "/TestEmptyDB.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 public class MessageServiceTest {
 
     @Autowired
     MessageService messageService;
-
     @Autowired
     MessageDAO messageDAO;
 
     @Test
+    @Sql("/testEntities.sql")
+    @Sql("/TestMessagesUnread.sql")
     public void changeMessagesStatusAsRead() {
-        List<Message> messages = new ArrayList<>();
-        messages.add(new Message("test content One", Calendar.getInstance(), null, null, MessageStatus.UNREAD));
-        messages.add(new Message("test content Two", Calendar.getInstance(), null, null, MessageStatus.UNREAD));
-        messages.add(new Message("test content Three", Calendar.getInstance(), null, null, MessageStatus.UNREAD));
-
+        List<Long> messagesID = List.of(1L, 2L, 3L);
+        List<Message> messages = messageDAO.findAllById(messagesID);
         ResponseEntity response = messageService.changeMessageStatusAsRead(messages);
-        List<Long> messagesID = messages.stream().map(curMessage -> curMessage.getId()).toList();
         List<Message> messagesMarkAsRead = messageDAO.findAllById(messagesID);
 
         boolean isSuccessfulResponse = response.getStatusCode().is2xxSuccessful();
@@ -50,4 +47,6 @@ public class MessageServiceTest {
         Assertions.assertTrue(areAllMessagesMarkAsRead);
 
     }
+
+
 }
