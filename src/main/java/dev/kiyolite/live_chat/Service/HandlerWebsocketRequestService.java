@@ -35,7 +35,7 @@ public class HandlerWebsocketRequestService {
     private JWTService jwtService;
     private UserDAO userDAO;
     private MessageService messageService;
-    private SimpleDateFormat dateCaster = new SimpleDateFormat("yyyy-m-dd");
+    private SimpleDateFormat dateCaster = new SimpleDateFormat("yyyy-MM-dd-H-m-s");
 
     public void tryConnectUser(WebsocketRequest request, WebSocketSession session) throws IOException {
         AuthLogin authLogin = objMapper.convertValue(request.payload(), AuthLogin.class);
@@ -59,7 +59,7 @@ public class HandlerWebsocketRequestService {
             return;
         }
         String payload = request.payload();
-        SendMessageRequest messageToSend = objMapper.convertValue(payload, SendMessageRequest.class);
+        SendMessageRequest messageToSend = objMapper.readValue(payload, SendMessageRequest.class);
         sendMessage(session, messageToSend);
     }
 
