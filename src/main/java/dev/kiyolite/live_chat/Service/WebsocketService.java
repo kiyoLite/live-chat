@@ -28,8 +28,6 @@ public class WebsocketService extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-//        System.out.println("is connect Users null? : " + connectUsers == null);
-//        System.out.println("is session null? : " + session == null);
         connectUsers.put(session, null);
     }
 
