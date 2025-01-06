@@ -32,12 +32,12 @@ public class JWTService {
 
     public String getKey(UserDetails user) {
         Map claims = new HashMap<>();
-        String token = createToken(user, claims);
+        String token = create(user, claims);
         return token;
 
     }
 
-    private String createToken(UserDetails user, Map claims) {
+    private String create(UserDetails user, Map claims) {
         JwtBuilder builder = Jwts.builder()
                 .setClaims(claims)
                 .setSubject(user.getUsername())
@@ -75,7 +75,7 @@ public class JWTService {
         return getSingleClaim(token, claims -> claims.getExpiration());
     }
 
-    public boolean isValidToken(UserDetails user, String token) {
+    public boolean isValid(UserDetails user, String token) {
         String userName = user.getUsername();
         String tokenUserName = getSubject(token);
         boolean areNamesEquals = userName.equals(tokenUserName);

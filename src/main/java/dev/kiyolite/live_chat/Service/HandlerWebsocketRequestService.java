@@ -104,7 +104,7 @@ public class HandlerWebsocketRequestService {
     }
 
     private boolean isPossibleConnectUser(User user, String token) {
-        if (user == null || !jwtService.isValidToken(user.getUserDetais(), token)) {
+        if (user == null || !jwtService.isValid(user.getUserDetais(), token)) {
             return false;
         }
 
