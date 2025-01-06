@@ -28,6 +28,8 @@ public class WebsocketService extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+//        System.out.println("is connect Users null? : " + connectUsers == null);
+//        System.out.println("is session null? : " + session == null);
         connectUsers.put(session, null);
     }
 
@@ -38,7 +40,7 @@ public class WebsocketService extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        WebsocketRequest request = ObjectMapper.convertValue(message.getPayload(), WebsocketRequest.class);
+        WebsocketRequest request = ObjectMapper.readValue(message.getPayload(), WebsocketRequest.class);
         WebsocketRequestType requestType = WebsocketRequestType.valueOf(request.websocketRequestType());
         switch (requestType) {
             case CONNECT:
@@ -48,7 +50,7 @@ public class WebsocketService extends TextWebSocketHandler {
                 break;
         }
     }
-
+    
     @Autowired
     public void setObjectMapper(ObjectMapper ObjectMapper) {
         this.ObjectMapper = ObjectMapper;
