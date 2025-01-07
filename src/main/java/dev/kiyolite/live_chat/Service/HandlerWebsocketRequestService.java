@@ -38,7 +38,7 @@ public class HandlerWebsocketRequestService {
     private SimpleDateFormat dateCaster = new SimpleDateFormat("yyyy-MM-dd-H-m-s");
 
     public void tryConnectUser(WebsocketRequest request, WebSocketSession session) throws IOException {
-        AuthLogin authLogin = objMapper.convertValue(request.payload(), AuthLogin.class);
+        AuthLogin authLogin = objMapper.readValue(request.payload(), AuthLogin.class);
         String token = authLogin.jwtToken();
         String userName = jwtService.getSubject(token);
         Optional<User> possibleUser = userDAO.findByUserName(userName);
