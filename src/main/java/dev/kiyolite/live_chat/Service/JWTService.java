@@ -30,7 +30,7 @@ public class JWTService {
 
     private String secretKey = System.getenv("JWT_KEY");
 
-    public String getKey(UserDetails user) {
+    public String getToken(UserDetails user) {
         Map claims = new HashMap<>();
         String token = create(user, claims);
         return token;
@@ -47,7 +47,7 @@ public class JWTService {
         expiration.add(Calendar.HOUR_OF_DAY, expirationTimeInHourse);
         builder.setExpiration(expiration.getTime());
         Key key = getKey();
-        SignatureAlgorithm keyAlgorithm = SignatureAlgorithm.ES256;
+        SignatureAlgorithm keyAlgorithm = SignatureAlgorithm.HS256;
         builder.signWith(key, keyAlgorithm);
 
         String token = builder.compact();
