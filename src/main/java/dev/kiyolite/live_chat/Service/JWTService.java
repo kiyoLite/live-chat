@@ -68,7 +68,12 @@ public class JWTService {
     }
 
     public String getSubject(String token) {
-        return getSingleClaim(token, claims -> claims.getSubject());
+        try {
+            return getSingleClaim(token, claims -> claims.getSubject());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     private Date getExpiration(String token) {
