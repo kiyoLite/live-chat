@@ -7,8 +7,13 @@ package dev.kiyolite.live_chat.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.kiyolite.live_chat.Entities.AuthLogin;
+import dev.kiyolite.live_chat.Entities.DB.User;
+import dev.kiyolite.live_chat.Entities.MessageWrapper;
+import dev.kiyolite.live_chat.Entities.SendMessageRequest;
 import dev.kiyolite.live_chat.Entities.WebsocketRequest;
 import dev.kiyolite.live_chat.Enums.WebsocketRequestType;
+import dev.kiyolite.live_chat.Persistence.DAO.MessageDAO;
+import dev.kiyolite.live_chat.Persistence.DAO.UserDAO;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -19,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
@@ -36,6 +42,12 @@ public class HandlerWebsocketRequestServiceTest {
     WebsocketService WebsocketService;
     @Autowired
     ObjectMapper objMapper;
+    @Autowired
+    MessageDAO messageDAO;
+    @Autowired
+    UserDAO userDAO;
+    @Autowired
+    JWTService jwtService;
     private CompletableFuture<TextMessage> futureResponse;
     private WebSocketSession session;
 
@@ -62,22 +74,34 @@ public class HandlerWebsocketRequestServiceTest {
     public void tearDownTest() {
         futureResponse = null;
     }
-    
+
     @Test
     public void NotConnect() throws JsonProcessingException, IOException, InterruptedException, ExecutionException {
         WebsocketService.getConnectUsers().put(session, 0L);
-        String wrongAuthToken = "this.is.wrongToken"; 
+        String wrongAuthToken = "this.is.wrongToken";
         AuthLogin authUser = new AuthLogin(wrongAuthToken);
         WebsocketRequest websocketRequest = new WebsocketRequest(WebsocketRequestType.CONNECT.name(), objMapper.writeValueAsString(authUser));
         TextMessage request = new TextMessage(objMapper.writeValueAsString(websocketRequest));
 
         session.sendMessage(request);
         TextMessage response = futureResponse.get();
-        
+
         String HopeconnectionErrorMessage = "session conection fail. session close";
         String obtainConnectionErrorMesage = response.getPayload();
         boolean areEqualsConnectionsErrorMessages = HopeconnectionErrorMessage.equals(obtainConnectionErrorMesage);
         Assertions.assertTrue(areEqualsConnectionsErrorMessages);
     }
 
+    @Sql("/TestWebsocketEnviroment.sql")
+    @Sql(scripts = "/TestEmptyDB.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    public void connect() throws JsonProcessingException, IOException {
+        long userIdFromScript = 1;
+        User user = userDAO.findById(userIdFromScript).get();
+        String authToken = jwtService.getToken(user.getUserDetais());
+        AuthLogin authUser = new AuthLogin(authToken);
+        WebsocketRequest websocketRequest = new WebsocketRequest(WebsocketRequestType.CONNECT.name(), objMapper.writeValueAsString(authUser));
+        TextMessage request = new TextMessage(objMapper.writeValueAsString(websocketRequest));
+        session.sendMessage(request);
+    }
 }
