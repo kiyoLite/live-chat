@@ -22,13 +22,13 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 @Service
 public class WebsocketService extends TextWebSocketHandler {
 
-    private static ConcurrentHashMap<WebSocketSession, Long> connectUsers = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<WebSocketSession, Long> connectUsers = new ConcurrentHashMap<>();
     private HandlerWebsocketRequestService requestHandler;
     private ObjectMapper ObjectMapper;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        connectUsers.put(session, null);
+        connectUsers.put(session, 0L);
     }
 
     @Override
@@ -43,8 +43,9 @@ public class WebsocketService extends TextWebSocketHandler {
         switch (requestType) {
             case CONNECT:
                 requestHandler.tryConnectUser(request, session);
+                break;
             case SEND_MESSAGE:
-
+                requestHandler.trySendMessage(request, session);
                 break;
         }
     }
