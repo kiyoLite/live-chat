@@ -85,7 +85,7 @@ public class JWTService {
         String tokenUserName = getSubject(token);
         boolean areNamesEquals = userName.equals(tokenUserName);
         boolean isExpired = isExpired(token);
-        return areNamesEquals && isExpired;
+        return areNamesEquals && !isExpired;
     }
 
     private boolean isExpired(String token){
