@@ -44,7 +44,7 @@ public class HandlerWebsocketRequestService {
         Optional<User> possibleUser = userDAO.findByUserName(userName);
         User user = possibleUser.orElseGet(() -> null);
 
-        if (isPossibleConnectUser(user, token)) {
+        if (!isPossibleConnectUser(user, token)) {
             closeConnection(session);
             return;
         }
@@ -91,7 +91,8 @@ public class HandlerWebsocketRequestService {
     private boolean isUserConnect(WebSocketSession session) {
         ConcurrentHashMap connectUsers = WebsocketService.getConnectUsers();
         boolean existSessionKey = connectUsers.containsKey(session);
-        return existSessionKey && connectUsers.get(session) != null;
+        Long defaultLongValue = 0L;
+        return existSessionKey && !connectUsers.get(session).equals(defaultLongValue);
     }
 
     private void sendUserConnectionRequest(WebSocketSession session) throws IOException {
