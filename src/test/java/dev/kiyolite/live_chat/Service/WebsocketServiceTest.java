@@ -36,7 +36,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
  */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class HandlerWebsocketRequestServiceTest {
+public class WebsocketServiceTest {
 
     @Autowired
     WebsocketService WebsocketService;
