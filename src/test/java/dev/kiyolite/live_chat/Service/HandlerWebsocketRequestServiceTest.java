@@ -40,6 +40,7 @@ public class HandlerWebsocketRequestServiceTest {
 
     @Autowired
     WebsocketService WebsocketService;
+    
     @Autowired
     ObjectMapper objMapper;
     @Autowired
@@ -103,5 +104,29 @@ public class HandlerWebsocketRequestServiceTest {
         WebsocketRequest websocketRequest = new WebsocketRequest(WebsocketRequestType.CONNECT.name(), objMapper.writeValueAsString(authUser));
         TextMessage request = new TextMessage(objMapper.writeValueAsString(websocketRequest));
         session.sendMessage(request);
+    }
+
+    @Test
+    @Sql("/TestWebsocketEnviroment.sql")
+    @Sql(scripts = "/TestEmptyDB.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void trySendMessage() throws JsonProcessingException, Exception {
+        connect();
+        long userIdOfChatFromSqlScript = 1;
+        long chatIdFromSqlScript = 1;
+        String messageContent = "test message";
+        SendMessageRequest sendMessageRequest = new SendMessageRequest(messageContent, userIdOfChatFromSqlScript, chatIdFromSqlScript);
+        WebsocketRequest websocketRequest = new WebsocketRequest(WebsocketRequestType.SEND_MESSAGE.name(), objMapper.writeValueAsString(sendMessageRequest));
+        TextMessage request = new TextMessage(objMapper.writeValueAsString(websocketRequest));
+
+        session.sendMessage(request);
+        TextMessage response = futureResponse.get();
+
+        long messageIdFromSaveMessage = 1;
+        boolean wasMessageSave = messageDAO.existsById(messageIdFromSaveMessage);
+        Assertions.assertTrue(wasMessageSave);
+        String contentResponseMessage = objMapper.readValue(response.getPayload(), MessageWrapper.class).content();
+        boolean isEqualContentOfSendAndRecipieMessage = contentResponseMessage.equals(messageContent);
+        Assertions.assertTrue(isEqualContentOfSendAndRecipieMessage);
+
     }
 }
