@@ -14,7 +14,6 @@ import java.util.Calendar;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,7 +37,6 @@ public class MessageServiceTest {
     @Sql("/testEntities.sql")
     @Sql("/TestMessagesUnread.sql")
     @Sql(scripts = "/TestEmptyDB.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-
     public void changeMessagesStatusAsRead() {
         List<Long> messagesID = List.of(1L, 2L, 3L);
         List<Message> messages = messageDAO.findAllById(messagesID);
@@ -56,7 +54,6 @@ public class MessageServiceTest {
     @Sql("/testEntities.sql")
     @Sql("/testMessagesFromToday.sql")
     @Sql(scripts = "/TestEmptyDB.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-
     public void getLastestMessages() {
         long chatIdFromSqlScript = 1;
         RequestLoadingMessages request = new RequestLoadingMessages(chatIdFromSqlScript, null, 2);
