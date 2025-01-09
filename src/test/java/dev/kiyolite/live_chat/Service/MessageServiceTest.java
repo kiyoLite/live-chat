@@ -27,8 +27,6 @@ import org.springframework.test.context.jdbc.Sql;
  */
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Sql(scripts = "/TestEmptyDB.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 public class MessageServiceTest {
 
     @Autowired
@@ -39,6 +37,8 @@ public class MessageServiceTest {
     @Test
     @Sql("/testEntities.sql")
     @Sql("/TestMessagesUnread.sql")
+    @Sql(scripts = "/TestEmptyDB.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+
     public void changeMessagesStatusAsRead() {
         List<Long> messagesID = List.of(1L, 2L, 3L);
         List<Message> messages = messageDAO.findAllById(messagesID);
@@ -55,6 +55,8 @@ public class MessageServiceTest {
     @Test
     @Sql("/testEntities.sql")
     @Sql("/testMessagesFromToday.sql")
+    @Sql(scripts = "/TestEmptyDB.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+
     public void getLastestMessages() {
         long chatIdFromSqlScript = 1;
         RequestLoadingMessages request = new RequestLoadingMessages(chatIdFromSqlScript, null, 2);
@@ -72,13 +74,15 @@ public class MessageServiceTest {
     @Test
     @Sql("/testEntities.sql")
     @Sql("/TestMessagesDifferentDates.sql")
+    @Sql(scripts = "/TestEmptyDB.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+
     public void loadingMoreMessages(){
         SimpleDateFormat dateFomart = new SimpleDateFormat("yyyy-MM-dd-H-m-s");
-        Calendar fiveMinutesAgo = Calendar.getInstance();
-        fiveMinutesAgo.add(Calendar.MINUTE, -5);
+        Calendar fourMinutesAgo = Calendar.getInstance();
+        fourMinutesAgo.add(Calendar.MINUTE, -4);
         
         long chatIdFromSqlScript = 1;
-        String startDateLoadingMessage = dateFomart.format(fiveMinutesAgo.getTime());
+        String startDateLoadingMessage = dateFomart.format(fourMinutesAgo.getTime());
         int dummyLimit = 100 ;
         RequestLoadingMessages request = new RequestLoadingMessages(chatIdFromSqlScript,startDateLoadingMessage,dummyLimit);
         ResponseEntity<List<MessageWrapper>> response = messageService.loadingMoreMessages(request);
