@@ -17,7 +17,6 @@ import dev.kiyolite.live_chat.Persistence.DAO.UserDAO;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,11 +68,6 @@ public class WebsocketServiceTest {
                 .get();
         this.session = clientSession;
 
-    }
-
-    @AfterEach
-    public void tearDownTest() {
-        futureResponse = null;
     }
 
     @Test
