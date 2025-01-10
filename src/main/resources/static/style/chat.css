@@ -1,0 +1,89 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+:root {
+    --MainBackground: #2A2C2D;
+    --SecondBackground: #2e3031;
+    --ThirdBackground: #6b5cc0;
+    --MainTitleFontFamilyColor: #fdfdfd;
+
+}
+
+@font-face {
+    font-family: lato;
+    src: url(../fonts/Lato-Regular.ttf);
+}
+
+#main-container {
+    display: grid;
+    grid-template-columns: 4fr 6fr;
+    height: 100%;
+
+}
+
+#container-search-view-contacts {
+    background-color: var(--SecondBackground);
+    width: 100%;
+    height: 100%;
+
+}
+
+#chat-container {
+    background-color: var(--MainBackground);
+    width: 100%;
+    height: 100%;
+}
+
+#search-contact-container {
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+}
+
+#search-contact-container nav {
+    display: flex;
+    justify-content: center;
+    padding: 0 1.3rem;
+    gap: 0.7rem
+}
+
+#search-contact-container nav input {
+    width: 100%;
+    border-radius: 3rem;
+    border: none;
+    outline: none;
+    background-color: #393b3b;
+    padding: 0 1rem;
+    color: white;
+    height: 2.6rem;
+    font-size: 1rem;
+}
+
+#search-contact-container nav button {
+    border: none;
+    background-color: #6b5cc0;
+    border-radius: 100%;
+    cursor: pointer;
+    padding: 0.3rem;
+}
+
+#search-contact-container nav button img {
+    border: 0;
+    height: 2rem;
+    width: 2rem;
+}
+
+#contacts-title {
+    font-size: 3rem;
+    color: var(--MainTitleFontFamilyColor);
+    font-family: lato;
+    text-align: center;
+    text-transform: capitalize;
+    margin-bottom: 1.5rem;
+}
