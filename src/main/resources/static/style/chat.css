@@ -4,6 +4,9 @@
     box-sizing: border-box;
 }
 
+body {
+    height: 100vh;
+}
 
 :root {
     --MainBackground: #2A2C2D;
@@ -20,9 +23,8 @@
 
 #main-container {
     display: grid;
-    grid-template-columns: 4fr 6fr;
+    grid-template-columns: 3fr 7fr;
     height: 100%;
-
 }
 
 #container-search-view-contacts {
@@ -43,7 +45,6 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-
 }
 
 #search-contact-container nav {
