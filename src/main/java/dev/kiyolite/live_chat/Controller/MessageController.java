@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -19,21 +20,19 @@ import org.springframework.web.bind.annotation.RestController;
  * @author soyky
  */
 @RestController
+@RequestMapping("/api")
 public class MessageController {
-    
+
     private MessageService messageService;
-    
-    
+
     @PostMapping("/message")
-    public ResponseEntity<List<MessageWrapper>> getMessageFromChat(@RequestBody RequestLoadingMessages request){
+    public ResponseEntity<List<MessageWrapper>> getMessageFromChat(@RequestBody RequestLoadingMessages request) {
         return messageService.loadingMoreMessages(request);
     }
-    
+
     @PutMapping("/message/status")
-    public ResponseEntity<Void> markMessagesAsRead(List<MessageWrapper> messages){
+    public ResponseEntity<Void> markMessagesAsRead(List<MessageWrapper> messages) {
         return messageService.changeMessageStatusAsRead(messageService.clientToDBMessages(messages));
     }
-    
-    
-    
+
 }

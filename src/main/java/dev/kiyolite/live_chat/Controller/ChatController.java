@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -20,25 +21,25 @@ import org.springframework.web.bind.annotation.RestController;
  * @author soyky
  */
 @RestController
+@RequestMapping("/api")
 public class ChatController {
-    
+
     private ChatService ChatService;
-    
+
     @GetMapping("/contact/")
-    public ResponseEntity<List<ChatWrapper>> getContacts(String userNameRequest){
+    public ResponseEntity<List<ChatWrapper>> getContacts(String userNameRequest) {
         return ChatService.getContactsFromUser(userNameRequest);
     }
 
     @PostMapping("/contact")
-    public ResponseEntity<ChatWrapper> addContact(@RequestBody ContactAdditionRequest addContanctRequest, long userRequestId){
+    public ResponseEntity<ChatWrapper> addContact(@RequestBody ContactAdditionRequest addContanctRequest,
+            long userRequestId) {
         return ChatService.addContact(addContanctRequest, userRequestId);
     }
-    
-    
+
     @Autowired
     public void setChatService(ChatService ChatService) {
         this.ChatService = ChatService;
     }
-    
-    
+
 }
