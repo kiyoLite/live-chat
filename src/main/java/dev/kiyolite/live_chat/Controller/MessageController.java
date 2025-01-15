@@ -32,7 +32,7 @@ public class MessageController {
     }
 
     @PutMapping("/message/status")
-    public ResponseEntity<Void> markMessagesAsRead(List<MessageWrapper> messages) {
+    public ResponseEntity<Void> markMessagesAsRead(@RequestBody List<MessageWrapper> messages) {
         return messageService.changeMessageStatusAsRead(messageService.clientToDBMessages(messages));
     }
 
