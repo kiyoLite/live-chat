@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+###Custome####
+
+src/main/resources/import.sql
+src/main/resources/application.yml
