@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>chat</title>
-    <link rel="stylesheet" href="../static/style/chat.css">
+    <link th:href="@{/style/chat.css}" rel="stylesheet">
 </head>
 
 <body>
@@ -16,13 +16,13 @@
                 <nav>
                     <input type="text">
                     <button>
-                        <img src="../static/images/search.svg" alt="">
+                        <img th:src="@{/images/search.svg}" alt="">
                     </button>
                 </nav>
             </header>
             <article id="contacts-container">
                 <div id="add-contact">
-                    <img src="../static/images/add.svg" alt="">
+                    <img th:src="@{/images/add.svg}" alt="">
                     <p>add contact</p>
                 </div>
                 <div id="contacts">
@@ -49,11 +49,11 @@
         <section id="chat-container">
             <header id="chat-header">
                 <figure id="chat-meta-data">
-                    <img src="../static/images/user.svg" alt="">
+                    <img th:src="@{/images/user.svg}" alt="">
                     <figcaption> user name</figcaption>
                 </figure>
                 <button id="menu">
-                    <img src="" alt="">
+                    <!--<img th:src="" alt="">-->
                 </button>
             </header>
             <div id="messages-container">
@@ -72,13 +72,13 @@
             <div id="send-message-container">
                 <input type="text">
                 <button>
-                    <img src="../static/images/send.svg" alt="">
+                    <img th:src="@{/images/send.svg}" alt="">
                 </button>
             </div>
         </section>
     </main>
 
-    <script type="module" src="static/js/api/message.js"></script>
+    <script type="module" th:src="@{/js/api/message.js}"></script>
 </body>
 
 </html>
