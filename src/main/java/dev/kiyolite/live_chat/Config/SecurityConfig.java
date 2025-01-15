@@ -13,17 +13,17 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @EnableWebSecurity
 @Configuration
-@EnableMethodSecurity(securedEnabled = true , jsr250Enabled = true)
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
-    
+
     
     @Bean
-    public SecurityFilterChain httpConfig(HttpSecurity http) throws Exception{
-        http.authorizeHttpRequests(auth ->
-                auth.anyRequest().permitAll()
-        
-        );
-        
+    public SecurityFilterChain httpConfig(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth
+                -> auth.anyRequest().permitAll()
+        )
+                .csrf(csrfAuth -> csrfAuth.disable());
+
         return http.build();
     }
 }
