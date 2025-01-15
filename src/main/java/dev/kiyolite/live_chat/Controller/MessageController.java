@@ -8,6 +8,7 @@ import dev.kiyolite.live_chat.Entities.MessageWrapper;
 import dev.kiyolite.live_chat.Entities.RequestLoadingMessages;
 import dev.kiyolite.live_chat.Service.MessageService;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,6 +34,11 @@ public class MessageController {
     @PutMapping("/message/status")
     public ResponseEntity<Void> markMessagesAsRead(List<MessageWrapper> messages) {
         return messageService.changeMessageStatusAsRead(messageService.clientToDBMessages(messages));
+    }
+
+    @Autowired
+    public void setMessageService(MessageService messageService) {
+        this.messageService = messageService;
     }
 
 }
