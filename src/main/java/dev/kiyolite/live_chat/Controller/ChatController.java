@@ -32,9 +32,8 @@ public class ChatController {
         return ChatService.getContactsFromUser(userNameRequest);
     }
 
-    @PostMapping("/contact")
-    public ResponseEntity<ChatWrapper> addContact(@RequestBody ContactAdditionRequest addContanctRequest,
-            long userRequestId) {
+    @PostMapping("/contact/{id}")
+    public ResponseEntity<ChatWrapper> addContact(@RequestBody ContactAdditionRequest addContanctRequest,@PathVariable("id")long userRequestId) {
         return ChatService.addContact(addContanctRequest, userRequestId);
     }
 
