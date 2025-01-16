@@ -43,7 +43,7 @@ public class ChatRepositoryImp implements ChatRepository {
         Predicate filterByChatID = builder.equal(root.get("chat").get("id"), chatId);
         Order sortByCreationDate = builder.desc(root.get("creationDate"));
         Expression<String> creationDateAsString = builder.function(
-                "DATE_FORMAT", String.class, root.get("creationDate"), builder.literal("%Y-%c-%d")
+                "DATE_FORMAT", String.class, root.get("creationDate"), builder.literal("%Y-%c-%d-%H-%i-%S")
         );
         criteriaQuery.orderBy(sortByCreationDate);
         criteriaQuery.where(filterByChatID);
@@ -71,7 +71,7 @@ public class ChatRepositoryImp implements ChatRepository {
         Predicate filterByPreviosCreationDate = builder.lessThan(root.get("creationDate"), startDate);
         Order sortByCreationDate = builder.desc(root.get("creationDate"));
         Expression<String> creationDateAsString = builder.function(
-                "DATE_FORMAT", String.class, root.get("creationDate"), builder.literal("%Y-%c-%d")
+                "DATE_FORMAT", String.class, root.get("creationDate"), builder.literal("%Y-%c-%d-%H-%i-%S")
         );
         criteriaQuery.orderBy(sortByCreationDate);
         criteriaQuery.where(builder.and(filterByChatID, filterByPreviosCreationDate));
