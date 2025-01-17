@@ -24,10 +24,7 @@ const builderPreviousMessages = async function (chatId: number, starDate: string
     const messagesData: messageWrapper[] = await httpHanlder(await apiCallMessagesFromChat(chatId, starDate, totalMessages));
     if (messagesData === null) return new Array();
 
-    const regexTime = /(\b[01]?\d|2[0-3]):([0-5]?\d):([0-5]?\d)\b/;
-    const regexDate = /\b(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b/;
     const messages: HTMLDivElement[] = new Array(messagesData.length);
-
     for (const singleMessageData of messagesData) {
         messages.push(buildMessageViewFromWrapper(singleMessageData));
     }
@@ -75,4 +72,18 @@ const previousMessageView = async function (chatId: number, starDate: string, to
 
 }
 
+
+const insertMessageWrapperAsLast = function (messageWrapper: messageWrapper, lastContainer: HTMLDivElement) {
+    const mesageWiew = buildMessageViewFromWrapper(messageWrapper);
+    const messageDate = mesageWiew.getAttribute(atributteNameOfMesageDate)!;
+    const isContainerAndMessageHaveSameDate = messageDate === mesageWiew.getAttribute(atributteNameOfMesageDate);
+    if (!isContainerAndMessageHaveSameDate) {
+        lastContainer = builderContainerMessagesSpecificDate(messageDate, transformDateYYYYMMDDInPrettry(messageDate));
+        const mainMessageContainer = getDomElementOrError("#messages-container")!
+        if (mainMessageContainer === null) return;
+        mainMessageContainer.insertAdjacentElement("beforeend", lastContainer);
+    }
+    lastContainer.insertAdjacentElement("beforeend", mesageWiew);
+
+}
 export { previousMessageView }

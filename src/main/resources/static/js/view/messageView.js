@@ -11,24 +11,28 @@ import { httpHanlder } from "../util/api-handler.js";
 import { apiCallMessagesFromChat } from "../api/message.js";
 import { getDomElementOrError } from "../util/dom-handler.js";
 import { messageDate as atributteNameOfMesageDate, messageDate } from "../util/attributes-names.js";
+const buildMessageViewFromWrapper = function (messageWrapper) {
+    const regexTime = /(\b[01]?\d|2[0-3]):([0-5]?\d):([0-5]?\d)\b/;
+    const regexDate = /\b(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b/;
+    const messageView = document.createElement("div");
+    const messageTime = document.createElement("time");
+    messageTime.textContent = messageWrapper.creation_date.match(regexTime)[0];
+    messageView.insertAdjacentElement("beforeend", messageTime);
+    const messageContent = document.createElement("p");
+    messageContent.textContent = messageWrapper.content;
+    messageView.insertAdjacentElement("afterbegin", messageContent);
+    const messsageDate = messageWrapper.creation_date.match(regexDate)[0];
+    messageView.setAttribute(atributteNameOfMesageDate, messageDate);
+    return messageView;
+};
 const builderPreviousMessages = function (chatId, starDate, totalMessages) {
     return __awaiter(this, void 0, void 0, function* () {
         const messagesData = yield httpHanlder(yield apiCallMessagesFromChat(chatId, starDate, totalMessages));
         if (messagesData === null)
             return new Array();
-        const regexTime = /(\b[01]?\d|2[0-3]):([0-5]?\d):([0-5]?\d)\b/;
-        const regexDate = /\b(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b/;
         const messages = new Array(messagesData.length);
         for (const singleMessageData of messagesData) {
-            const curMessage = document.createElement("div");
-            const messageTime = document.createElement("time");
-            messageTime.textContent = singleMessageData.creation_date.match(regexTime)[0];
-            curMessage.insertAdjacentElement("beforeend", messageTime);
-            const messageContent = document.createElement("p");
-            messageContent.textContent = singleMessageData.content;
-            curMessage.insertAdjacentElement("afterbegin", messageContent);
-            const messsageDate = singleMessageData.creation_date.match(regexDate)[0];
-            curMessage.setAttribute(atributteNameOfMesageDate, messageDate);
+            messages.push(buildMessageViewFromWrapper(singleMessageData));
         }
         return messages;
     });
@@ -66,5 +70,18 @@ const previousMessageView = function (chatId, starDate, totalMessages) {
             OldestContainerMessages.firstElementChild.insertAdjacentElement("afterend", curMessagse);
         }
     });
+};
+const insertMessageWrapperAsLast = function (messageWrapper, lastContainer) {
+    const mesageWiew = buildMessageViewFromWrapper(messageWrapper);
+    const messageDate = mesageWiew.getAttribute(atributteNameOfMesageDate);
+    const isContainerAndMessageHaveSameDate = messageDate === mesageWiew.getAttribute(atributteNameOfMesageDate);
+    if (!isContainerAndMessageHaveSameDate) {
+        lastContainer = builderContainerMessagesSpecificDate(messageDate, transformDateYYYYMMDDInPrettry(messageDate));
+        const mainMessageContainer = getDomElementOrError("#messages-container");
+        if (mainMessageContainer === null)
+            return;
+        mainMessageContainer.insertAdjacentElement("beforeend", lastContainer);
+    }
+    lastContainer.insertAdjacentElement("beforeend", mesageWiew);
 };
 export { previousMessageView };
