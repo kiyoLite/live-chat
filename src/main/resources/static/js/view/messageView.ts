@@ -3,6 +3,23 @@ import { apiCallMessagesFromChat } from "../api/message.js"
 import { messageWrapper } from "../dto/messageWrapper.js";
 import { getDomElementOrError } from "../util/dom-handler.js";
 import { messageDate as atributteNameOfMesageDate, messageDate } from "../util/attributes-names.js";
+
+const buildMessageViewFromWrapper = function (messageWrapper: messageWrapper) {
+    const regexTime = /(\b[01]?\d|2[0-3]):([0-5]?\d):([0-5]?\d)\b/;
+    const regexDate = /\b(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b/;
+    const messageView = document.createElement("div");
+    const messageTime = document.createElement("time");
+    messageTime.textContent = messageWrapper.creation_date.match(regexTime)![0];
+    messageView.insertAdjacentElement("beforeend", messageTime);
+    const messageContent = document.createElement("p");
+    messageContent.textContent = messageWrapper.content;
+    messageView.insertAdjacentElement("afterbegin", messageContent);
+
+    const messsageDate = messageWrapper.creation_date.match(regexDate)![0];
+    messageView.setAttribute(atributteNameOfMesageDate, messageDate);
+    return messageView;
+}
+
 const builderPreviousMessages = async function (chatId: number, starDate: string, totalMessages: number): Promise<HTMLDivElement[]> {
     const messagesData: messageWrapper[] = await httpHanlder(await apiCallMessagesFromChat(chatId, starDate, totalMessages));
     if (messagesData === null) return new Array();
@@ -12,18 +29,8 @@ const builderPreviousMessages = async function (chatId: number, starDate: string
     const messages: HTMLDivElement[] = new Array(messagesData.length);
 
     for (const singleMessageData of messagesData) {
-        const curMessage = document.createElement("div");
-        const messageTime = document.createElement("time");
-        messageTime.textContent = singleMessageData.creation_date.match(regexTime)![0];
-        curMessage.insertAdjacentElement("beforeend", messageTime);
-        const messageContent = document.createElement("p");
-        messageContent.textContent = singleMessageData.content;
-        curMessage.insertAdjacentElement("afterbegin", messageContent);
-
-        const messsageDate = singleMessageData.creation_date.match(regexDate)![0];
-        curMessage.setAttribute(atributteNameOfMesageDate, messageDate);
+        messages.push(buildMessageViewFromWrapper(singleMessageData));
     }
-
     return messages;
 
 
