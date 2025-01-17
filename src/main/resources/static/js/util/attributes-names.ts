@@ -1,2 +1,3 @@
 const chatId = "chat-id";
-export { chatId }
+const messageDate = "messageDate"
+export { chatId, messageDate }
