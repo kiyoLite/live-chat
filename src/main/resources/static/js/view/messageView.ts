@@ -73,17 +73,18 @@ const previousMessageView = async function (chatId: number, starDate: string, to
 }
 
 
-const insertMessageWrapperAsLast = function (messageWrapper: messageWrapper, lastContainer: HTMLDivElement) {
+const insertMessageWrapperAsLast = function (messageWrapper: messageWrapper) {
+    const mainMessageContainer = getDomElementOrError("#messages-container")!
+    if (mainMessageContainer === null) return;
+    let lastContainer = mainMessageContainer.lastElementChild;
     const mesageWiew = buildMessageViewFromWrapper(messageWrapper);
     const messageDate = mesageWiew.getAttribute(atributteNameOfMesageDate)!;
-    const isContainerAndMessageHaveSameDate = messageDate === mesageWiew.getAttribute(atributteNameOfMesageDate);
+    const isContainerAndMessageHaveSameDate = messageDate === lastContainer?.getAttribute(atributteNameOfMesageDate);
     if (!isContainerAndMessageHaveSameDate) {
         lastContainer = builderContainerMessagesSpecificDate(messageDate, transformDateYYYYMMDDInPrettry(messageDate));
-        const mainMessageContainer = getDomElementOrError("#messages-container")!
-        if (mainMessageContainer === null) return;
         mainMessageContainer.insertAdjacentElement("beforeend", lastContainer);
     }
-    lastContainer.insertAdjacentElement("beforeend", mesageWiew);
+    lastContainer!.insertAdjacentElement("beforeend", mesageWiew);
 
 }
-export { previousMessageView }
+export { previousMessageView, insertMessageWrapperAsLast }
