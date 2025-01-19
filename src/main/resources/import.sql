@@ -1,4 +1,4 @@
-INSERT INTO credential(id,password,is_enable) VALUES (1, "Developer",1),(2,"123",1);
+INSERT INTO credential(id,password,is_enable,rol) VALUES (1, "Developer",1,"User"),(2,"123",1,"User");
 
 
 INSERT INTO member (id,user_name,email,credential_id) VALUES (1, "Kiyo","kiyo@dev.com",1),(2,"Johan","johan.apellido@gmail.com",2);
