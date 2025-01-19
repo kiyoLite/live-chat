@@ -23,7 +23,7 @@ public class WebsocketConfig implements WebSocketConfigurer{
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(chatHandler, "/chat");
+        registry.addHandler(chatHandler, "/join");
     }
     
     @Autowired

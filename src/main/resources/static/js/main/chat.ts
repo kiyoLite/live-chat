@@ -1,5 +1,5 @@
 import { errorManager, closeConnection, openConnection, recipeMessage } from "../websocket/event-listener.js";
-const websocketUrl = "ws://localhost:8080/chat"
+const websocketUrl = "ws://localhost:8080/join"
 const socketConnection: WebSocket = new WebSocket(websocketUrl);
 socketConnection.addEventListener("close", closeConnection);
 socketConnection.addEventListener("open", openConnection);

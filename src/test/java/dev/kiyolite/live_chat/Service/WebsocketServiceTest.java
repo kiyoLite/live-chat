@@ -63,7 +63,7 @@ public class WebsocketServiceTest {
                         futureResponse.complete(message);
                     }
                 },
-                        "ws://localhost:8080/chat"
+                        "ws://localhost:8080/join"
                 )
                 .get();
         this.session = clientSession;
