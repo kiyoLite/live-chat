@@ -1,5 +1,5 @@
 import { socketConnection } from "../main/chat.js";
-import { WebsocketRequestType } from "./request-type.js";
+import { WebsocketRequestType } from "./status-type.js";
 import { insertMessageWrapperAsLast } from "../view/messageView.js";
 const setConnection = function (websocketConnection) {
     const authToken = sessionStorage.getItem("authToken");

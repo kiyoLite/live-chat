@@ -1,4 +1,4 @@
-import { WebsocketRequestType } from "./request-type.js";
+import { WebsocketRequestType } from "./status-type.js";
 const sendMessage = function (content, receiverUserId, chatId, websocketConnection) {
     const messageToSend = {
         "content": content,
