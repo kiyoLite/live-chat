@@ -10,8 +10,8 @@ const setConnection = function (websocketConnection: WebSocket) {
         jwtToken: authToken
     };
     const socketRequest = {
-        payload: connectionRequest,
-        websocketRequestType: WebsocketRequestType.SEND_MESSAGE
+        payload: JSON.stringify(connectionRequest),
+        websocketRequestType: WebsocketRequestType.CONNECT
     };
     websocketConnection.send(JSON.stringify(socketRequest));
 };
