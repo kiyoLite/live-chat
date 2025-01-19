@@ -1,5 +1,6 @@
 enum WebsocketRequestType {
-    CONNECT, SEND_MESSAGE
+    CONNECT = "CONNECT",
+    SEND_MESSAGE = "SEND_MESSAGE"
 }
 
 export { WebsocketRequestType }
