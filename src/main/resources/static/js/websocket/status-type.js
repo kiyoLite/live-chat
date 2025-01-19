@@ -10,4 +10,4 @@ var WebsocketResponseType;
     WebsocketResponseType[WebsocketResponseType["SUCCESSFUL_SEND"] = 2] = "SUCCESSFUL_SEND";
     WebsocketResponseType[WebsocketResponseType["BAD_SEND"] = 3] = "BAD_SEND";
 })(WebsocketResponseType || (WebsocketResponseType = {}));
-export { WebsocketRequestType };
+export { WebsocketRequestType, WebsocketResponseType };

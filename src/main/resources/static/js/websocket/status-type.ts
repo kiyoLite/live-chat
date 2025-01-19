@@ -10,4 +10,4 @@ enum WebsocketResponseType {
     BAD_SEND
 }
 
-export { WebsocketRequestType }
+export { WebsocketRequestType, WebsocketResponseType }
