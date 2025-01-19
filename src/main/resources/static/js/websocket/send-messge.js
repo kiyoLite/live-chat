@@ -6,7 +6,7 @@ const sendMessage = function (content, receiverUserId, chatId, websocketConnecti
         "chatId": chatId,
     };
     const socketRequest = {
-        payload: messageToSend,
+        payload: JSON.stringify(messageToSend),
         websocketRequestType: WebsocketRequestType.SEND_MESSAGE
     };
     websocketConnection.send(JSON.stringify(socketRequest));
