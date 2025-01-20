@@ -1,6 +1,6 @@
 import { socketConnection } from "../main/chat.js";
 import { WebsocketRequestType } from "./status-type.js";
-import { insertMessageWrapperAsLast } from "../view/messageView.js";
+import { handlerRecipeMessage } from "./recipe-message-handler.js";
 const setConnection = function (websocketConnection) {
     const authToken = sessionStorage.getItem("authToken");
     if (authToken === null || authToken === "")
@@ -26,8 +26,7 @@ const closeConnection = function (event) {
         return closeConnectionError();
 };
 const recipeMessage = function (event) {
-    const message = JSON.parse(event.data);
-    insertMessageWrapperAsLast(message);
+    handlerRecipeMessage(event);
 };
 const errorManager = function (event) {
     console.error('websocket had a error');
