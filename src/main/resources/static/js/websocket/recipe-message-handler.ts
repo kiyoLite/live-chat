@@ -2,6 +2,7 @@ import { WebsocketResponseType } from "./status-type.js";
 import { websocketResponse } from "../dto/websocketResponse.js";
 import { insertMessageWrapperAsLast } from "../view/messageView.js";
 import { messageWrapper } from "../dto/messageWrapper.js";
+import { openSendMessageChannel } from "../message/events.js";
 
 const handlerWebsocketResponse = function (event: MessageEvent) {
     let websocketResponse: websocketResponse;
@@ -26,6 +27,12 @@ const handlerResponse = function (response: websocketResponse): void {
             const message: messageWrapper = JSON.parse(response.payload);
             return insertMessageWrapperAsLast(message);
         case WebsocketResponseType.BAD_SEND:
+            return;
+        case WebsocketResponseType.SUCCESSFUL_CONNECT:
+            openSendMessageChannel();
+            return;
+        case WebsocketResponseType.BAD_CONNECT:
+            return
 
     }
 
