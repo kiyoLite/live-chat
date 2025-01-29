@@ -198,6 +198,25 @@ body {
     font-weight: 700;
 }
 
+#load-more-messages {
+    text-transform: uppercase;
+    width: 90%;
+    padding: 10px 0;
+    margin: 30px auto;
+    cursor: pointer;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #3e4041;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 1.2rem;
+
+}
+
+#load-more-messages:active {
+    filter: contrast(94%);
+}
+
 .specific-date {
     width: 100%;
     /* border: solid; */
