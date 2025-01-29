@@ -1,5 +1,5 @@
 import { WebsocketResponseType } from "./status-type.js";
-import { insertMessageWrapperAsLast } from "../view/messageView.js";
+import { insertMessageAsLast } from "../message/insert-new-message.js";
 import { openSendMessageChannel } from "../message/events.js";
 const handlerWebsocketResponse = function (event) {
     let websocketResponse;
@@ -21,7 +21,7 @@ const handlerResponse = function (response) {
     switch (responseType) {
         case WebsocketResponseType.SUCCESSFUL_SEND:
             const message = JSON.parse(response.payload);
-            return insertMessageWrapperAsLast(message);
+            return insertMessageAsLast(message);
         case WebsocketResponseType.BAD_SEND:
             return;
         case WebsocketResponseType.SUCCESSFUL_CONNECT:
