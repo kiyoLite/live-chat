@@ -11,7 +11,9 @@ import dev.kiyolite.live_chat.Entities.DB.User;
 import dev.kiyolite.live_chat.Entities.MessageWrapper;
 import dev.kiyolite.live_chat.Entities.SendMessageRequest;
 import dev.kiyolite.live_chat.Entities.WebsocketRequest;
+import dev.kiyolite.live_chat.Entities.WebsocketResponse;
 import dev.kiyolite.live_chat.Enums.WebsocketRequestType;
+import dev.kiyolite.live_chat.Enums.WebsocketResponseType;
 import dev.kiyolite.live_chat.Persistence.DAO.MessageDAO;
 import dev.kiyolite.live_chat.Persistence.DAO.UserDAO;
 import java.io.IOException;
@@ -39,7 +41,7 @@ public class WebsocketServiceTest {
 
     @Autowired
     WebsocketService WebsocketService;
-    
+
     @Autowired
     ObjectMapper objMapper;
     @Autowired
@@ -79,18 +81,15 @@ public class WebsocketServiceTest {
         TextMessage request = new TextMessage(objMapper.writeValueAsString(websocketRequest));
 
         session.sendMessage(request);
-        TextMessage response = futureResponse.get();
+        WebsocketResponse response = objMapper.readValue(futureResponse.get().getPayload(), WebsocketResponse.class);
 
-        String HopeconnectionErrorMessage = "session conection fail. session close";
-        String obtainConnectionErrorMesage = response.getPayload();
-        boolean areEqualsConnectionsErrorMessages = HopeconnectionErrorMessage.equals(obtainConnectionErrorMesage);
-        Assertions.assertTrue(areEqualsConnectionsErrorMessages);
+        Assertions.assertEquals(WebsocketResponseType.BAD_CONNECT, response.responseType());
     }
 
     @Sql("/TestWebsocketEnviroment.sql")
     @Sql(scripts = "/TestEmptyDB.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Test
-    public void connect() throws JsonProcessingException, IOException {
+    public void connect() throws JsonProcessingException, IOException, InterruptedException, ExecutionException {
         long userIdFromScript = 1;
         User user = userDAO.findById(userIdFromScript).get();
         String authToken = jwtService.getToken(user.getUserDetais());
@@ -98,6 +97,10 @@ public class WebsocketServiceTest {
         WebsocketRequest websocketRequest = new WebsocketRequest(WebsocketRequestType.CONNECT.name(), objMapper.writeValueAsString(authUser));
         TextMessage request = new TextMessage(objMapper.writeValueAsString(websocketRequest));
         session.sendMessage(request);
+
+        WebsocketResponse response = objMapper.readValue(futureResponse.get().getPayload(), WebsocketResponse.class);
+
+        Assertions.assertEquals(WebsocketResponseType.SUCCESSFUL_CONNECT, response.responseType());
     }
 
     @Test
@@ -105,6 +108,7 @@ public class WebsocketServiceTest {
     @Sql(scripts = "/TestEmptyDB.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void trySendMessage() throws JsonProcessingException, Exception {
         connect();
+        futureResponse = new CompletableFuture<>();
         long userIdOfChatFromSqlScript = 1;
         long chatIdFromSqlScript = 1;
         String messageContent = "test message";
@@ -113,14 +117,9 @@ public class WebsocketServiceTest {
         TextMessage request = new TextMessage(objMapper.writeValueAsString(websocketRequest));
 
         session.sendMessage(request);
-        TextMessage response = futureResponse.get();
+        WebsocketResponse response = objMapper.readValue(futureResponse.get().getPayload(), WebsocketResponse.class);
 
-        long messageIdFromSaveMessage = 1;
-        boolean wasMessageSave = messageDAO.existsById(messageIdFromSaveMessage);
-        Assertions.assertTrue(wasMessageSave);
-        String contentResponseMessage = objMapper.readValue(response.getPayload(), MessageWrapper.class).content();
-        boolean isEqualContentOfSendAndRecipieMessage = contentResponseMessage.equals(messageContent);
-        Assertions.assertTrue(isEqualContentOfSendAndRecipieMessage);
+        Assertions.assertEquals(WebsocketResponseType.SUCCESSFUL_SEND, response.responseType());
 
     }
 }

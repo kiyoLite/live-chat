@@ -4,6 +4,7 @@
  */
 package dev.kiyolite.live_chat.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.kiyolite.live_chat.Entities.AuthLogin;
 import dev.kiyolite.live_chat.Entities.DB.Message;
@@ -11,6 +12,8 @@ import dev.kiyolite.live_chat.Entities.DB.User;
 import dev.kiyolite.live_chat.Entities.MessageWrapper;
 import dev.kiyolite.live_chat.Entities.SendMessageRequest;
 import dev.kiyolite.live_chat.Entities.WebsocketRequest;
+import dev.kiyolite.live_chat.Entities.WebsocketResponse;
+import dev.kiyolite.live_chat.Enums.WebsocketResponseType;
 import dev.kiyolite.live_chat.Persistence.DAO.UserDAO;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -81,7 +84,9 @@ public class HandlerWebsocketRequestService {
             }
             String now = dateCaster.format(new Date());
             MessageWrapper sendMessage = new MessageWrapper(saveMessage.getId(), messageToSend.content(), userCreatorMessage, now);
-            receiverConnection.sendMessage(new TextMessage(objMapper.writeValueAsString(sendMessage)));
+            WebsocketResponse websocketResponse = new WebsocketResponse(WebsocketResponseType.SUCCESSFUL_SEND, objMapper.writeValueAsString(sendMessage));
+            TextMessage response = new TextMessage(objMapper.writeValueAsString(websocketResponse));
+            receiverConnection.sendMessage(response);
             return;
         }
         messageService.saveMessage(messageToSend, false, userCreatorMessage);
@@ -97,11 +102,16 @@ public class HandlerWebsocketRequestService {
 
     private void sendUserConnectionRequest(WebSocketSession session) throws IOException {
         String connectionErrorMessage = "user doesn't have connection, connect before send message";
-        session.sendMessage(new TextMessage(connectionErrorMessage));
+        WebsocketResponse websocketResponse = new WebsocketResponse(WebsocketResponseType.BAD_SEND, connectionErrorMessage);
+        TextMessage response = new TextMessage(objMapper.writeValueAsString(websocketResponse));
+        session.sendMessage(response);
     }
 
-    private void startConnection(WebSocketSession session, long userId) {
+    private void startConnection(WebSocketSession session, long userId) throws JsonProcessingException, IOException {
         WebsocketService.getConnectUsers().put(session, userId);
+        WebsocketResponse websocketResponse = new WebsocketResponse(WebsocketResponseType.SUCCESSFUL_CONNECT, null);
+        TextMessage response = new TextMessage(objMapper.writeValueAsString(websocketResponse));
+        session.sendMessage(response);
     }
 
     private boolean isPossibleConnectUser(User user, String token) {
@@ -114,7 +124,9 @@ public class HandlerWebsocketRequestService {
 
     private void closeConnection(WebSocketSession session) throws IOException {
         String connectionErrorMessage = "session conection fail. session close";
-        session.sendMessage(new TextMessage(connectionErrorMessage));
+        WebsocketResponse websocketResponse = new WebsocketResponse(WebsocketResponseType.BAD_CONNECT, connectionErrorMessage);
+        TextMessage respone = new TextMessage(objMapper.writeValueAsString(websocketResponse));
+        session.sendMessage(respone);
         session.close();
     }
 
